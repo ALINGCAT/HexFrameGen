@@ -20,8 +20,9 @@ namespace HexFrameGen_Demo.ViewModels
             StaticFrameSegment header = new("AA 55");
             AutoLengthFrameSegment length = new(2);
             StaticFrameSegment command = new("20");
-            StaticFrameSegment data = new("01 2c");
+            DynamicFrameSegment data = new();
             AutoCheckSumFrameSegment crc = new(1);
+            data.SetData("01 2c");
             length.Register(length);
             length.Register(command);
             length.Register(data);

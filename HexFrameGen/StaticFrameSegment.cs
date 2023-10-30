@@ -12,7 +12,7 @@ namespace HexFrameGen
     /// </summary>
     public class StaticFrameSegment : FrameSegment
     {
-        private byte[] _data;
+        private readonly byte[] _data;
 
         public override byte[] Data => _data;
 
