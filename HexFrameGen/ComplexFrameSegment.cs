@@ -21,6 +21,8 @@ namespace HexFrameGen
 
         public void Add(FrameSegment segment) => _segments.Add(segment);
 
+        public override int Length => _segments.Sum(r => r.Length);
+
         public override byte[] Data
         {
             get
