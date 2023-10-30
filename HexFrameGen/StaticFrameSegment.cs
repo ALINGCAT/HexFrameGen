@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace HexFrameGen
 {
     /// <summary>
-    /// 静态帧段
+    /// 静态帧段 定长且数据固定的帧段
     /// The data is immutable
     /// </summary>
     public class StaticFrameSegment : FrameSegment

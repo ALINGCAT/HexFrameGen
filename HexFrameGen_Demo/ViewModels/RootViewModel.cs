@@ -23,18 +23,14 @@ namespace HexFrameGen_Demo.ViewModels
             DynamicFrameSegment data = new();
             AutoCheckSumFrameSegment crc = new(1);
             data.SetData("01 2c");
-            length.Register(length);
-            length.Register(command);
-            length.Register(data);
-            length.Register(crc);
+            ComplexFrameSegment nc = new() { length, command, data, crc };
+            length.Register(nc);
             crc.Register(length);
             crc.Register(command);
             crc.Register(data);
             setLd.AddSegment(header);
-            setLd.AddSegment(length);
-            setLd.AddSegment(command);
-            setLd.AddSegment(data);
-            setLd.AddSegment(crc);
+            setLd.AddSegment(nc);
+            Console.WriteLine(nc);
         }
     }
 }

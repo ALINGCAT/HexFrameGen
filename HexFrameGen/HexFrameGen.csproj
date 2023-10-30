@@ -45,6 +45,8 @@
     <Compile Include="AutoFrameSegment.cs" />
     <Compile Include="AutoFrameSegments\AutoCheckSumFrameSegment.cs" />
     <Compile Include="AutoFrameSegments\AutoLengthFrameSegment.cs" />
+    <Compile Include="ComplexFrameSegment.cs" />
+    <Compile Include="DynamicFrameSegment.cs" />
     <Compile Include="FrameSegment.cs" />
     <Compile Include="HexFrame.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

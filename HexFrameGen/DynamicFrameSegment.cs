@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace HexFrameGen
 {
+    /// <summary>
+    /// 动态帧段 不定长帧段
+    /// </summary>
     public class DynamicFrameSegment : FrameSegment
     {
         private byte[] _data;
