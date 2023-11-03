@@ -3,10 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace HexFrameGen
 {
-    public class HexFrame : ComplexFrameSegment
+    public interface ISettable
     {
+        public void SetData(IEnumerable<byte> data);
+
+        public void SetData(string data);
     }
 }

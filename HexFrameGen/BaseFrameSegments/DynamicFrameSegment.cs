@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HexFrameGen
+namespace HexFrameGen.BaseFrameSegments
 {
     /// <summary>
     /// 动态帧段 不定长帧段
     /// </summary>
-    public class DynamicFrameSegment : FrameSegment
+    public class DynamicFrameSegment : BaseFrameSegment, ISettable
     {
         private byte[] _data;
 

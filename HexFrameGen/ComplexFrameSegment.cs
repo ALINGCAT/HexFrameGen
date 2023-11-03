@@ -13,13 +13,12 @@ namespace HexFrameGen
     public class ComplexFrameSegment : FrameSegment, IEnumerable<FrameSegment>
     {
         protected readonly List<FrameSegment> _segments = new();
-        public void AddSegment(FrameSegment segment) => _segments.Add(segment);
 
         public IEnumerator<FrameSegment> GetEnumerator() => _segments.GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => _segments.GetEnumerator();
 
-        public void Add(FrameSegment segment) => _segments.Add(segment);
+        public virtual void Add(FrameSegment segment) => _segments.Add(segment);
 
         public override int Length => _segments.Sum(r => r.Length);
 

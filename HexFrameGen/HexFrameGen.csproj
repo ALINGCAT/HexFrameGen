@@ -42,15 +42,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AutoFrameSegment.cs" />
-    <Compile Include="AutoFrameSegments\AutoCheckSumFrameSegment.cs" />
-    <Compile Include="AutoFrameSegments\AutoLengthFrameSegment.cs" />
+    <Compile Include="BaseFrameSegments\AutoFrameSegment.cs" />
+    <Compile Include="BaseFrameSegments\AutoFrameSegments\AutoCheckSumFrameSegment.cs" />
+    <Compile Include="BaseFrameSegments\AutoFrameSegments\AutoLengthFrameSegment.cs" />
+    <Compile Include="BaseFrameSegment.cs" />
+    <Compile Include="BaseFrameSegments\FixedFrameSegment.cs" />
     <Compile Include="ComplexFrameSegment.cs" />
-    <Compile Include="DynamicFrameSegment.cs" />
+    <Compile Include="BaseFrameSegments\DynamicFrameSegment.cs" />
     <Compile Include="FrameSegment.cs" />
-    <Compile Include="HexFrame.cs" />
+    <Compile Include="ComplexFrameSegments\HexFrame.cs" />
+    <Compile Include="ISettable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StaticFrameSegment.cs" />
+    <Compile Include="BaseFrameSegments\StaticFrameSegment.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

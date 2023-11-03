@@ -13,8 +13,5 @@
     ShowTitle="True"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
-    <TextBlock
-        HorizontalAlignment="Center"
-        VerticalAlignment="Center"
-        Text="Hello World"/>
+    <Button Content="{Binding ClickBtnText}" Command="{Binding Click}" />
 </hc:Window>

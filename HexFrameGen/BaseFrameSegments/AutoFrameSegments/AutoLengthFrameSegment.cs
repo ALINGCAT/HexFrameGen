@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HexFrameGen.AutoFrameSegments
+namespace HexFrameGen.BaseFrameSegments.AutoFrameSegments
 {
     public class AutoLengthFrameSegment : AutoFrameSegment
     {

@@ -1,5 +1,9 @@
-﻿using HexFrameGen;
-using HexFrameGen.AutoFrameSegments;
+﻿using HandyControl.Controls;
+using HandyControl.Tools.Command;
+using HexFrameGen;
+using HexFrameGen.BaseFrameSegments;
+using HexFrameGen.BaseFrameSegments.AutoFrameSegments;
+using HexFrameGen.ComplexFrameSegments;
 using Stylet;
 using System;
 
@@ -16,21 +20,28 @@ namespace HexFrameGen_Demo.ViewModels
 
         public RootViewModel()
         {
-            HexFrame setLd = new();
+            
+        }
+
+        public string ClickBtnText => "Click Me!";
+
+        public RelayCommand Click => new(s =>
+        {
+            HexFrame frame = new();
             StaticFrameSegment header = new("AA 55");
             AutoLengthFrameSegment length = new(2);
-            StaticFrameSegment command = new("20");
+            FixedFrameSegment command = new(1);
             DynamicFrameSegment data = new();
             AutoCheckSumFrameSegment crc = new(1);
+            command.SetData("20");
             data.SetData("01 2c");
-            ComplexFrameSegment nc = new() { length, command, data, crc };
+            ComplexFrameSegment ncs = new() { length, command, data };
+            ComplexFrameSegment nc = new() { ncs, crc };
             length.Register(nc);
-            crc.Register(length);
-            crc.Register(command);
-            crc.Register(data);
-            setLd.AddSegment(header);
-            setLd.AddSegment(nc);
-            Console.WriteLine(nc);
-        }
+            crc.Register(ncs);
+            frame.Add(header);
+            frame.Add(nc);
+            Console.WriteLine(frame);
+        });
     }
 }
