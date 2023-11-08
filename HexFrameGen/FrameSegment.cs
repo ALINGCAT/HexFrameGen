@@ -12,8 +12,6 @@ namespace HexFrameGen
     public abstract class FrameSegment
     {
         public virtual byte[] Data { get; }
-        public virtual int Length { get => Data.Count(); }
-        public virtual int CheckSum { get => Data.Sum(r => r); }
         public override string ToString() => BitConverter.ToString(Data).Replace("-", " ");
     }
 }

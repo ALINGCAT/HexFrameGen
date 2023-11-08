@@ -3,14 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace HexFrameGen
 {
-    public interface ISettable
+    public interface INewable<T>
     {
-        public void SetData(IEnumerable<byte> data);
-
-        public void SetData(string data);
+        T New();
     }
 }

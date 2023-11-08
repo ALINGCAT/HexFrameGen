@@ -1,9 +1,8 @@
 ﻿using HandyControl.Controls;
 using HandyControl.Tools.Command;
 using HexFrameGen;
+using HexFrameGen.AutoCalculator;
 using HexFrameGen.BaseFrameSegments;
-using HexFrameGen.BaseFrameSegments.AutoFrameSegments;
-using HexFrameGen.ComplexFrameSegments;
 using Stylet;
 using System;
 
@@ -20,28 +19,24 @@ namespace HexFrameGen_Demo.ViewModels
 
         public RootViewModel()
         {
-            
+            var calculators = AutoCalculatorGetter.GetAutoCalculatorByDll("AutoCalculators/DefaultAutoCalculator.dll");
+            var header = new StaticFrameSegment("AA 55");
+            var length = new AutoFrameSegment(2) { Calculator = calculators["BytesCount2B"] };
+            var command = new DynamicFrameSegment("Command");
+            var data = new DynamicFrameSegment("Data");
+            var crc = new AutoFrameSegment(1) { Calculator = calculators["CheckSum1B"] };
+            length.Register(length, command, data, crc);
+            crc.Register(length, command, data);
+            command.SetData("16");
+            data.SetData("03 E8");
+            var template = new TemplateFrame(header, length, command, data, crc);
+            Console.WriteLine(template);
         }
 
         public string ClickBtnText => "Click Me!";
 
         public RelayCommand Click => new(s =>
         {
-            HexFrame frame = new();
-            StaticFrameSegment header = new("AA 55");
-            AutoLengthFrameSegment length = new(2);
-            FixedFrameSegment command = new(1);
-            DynamicFrameSegment data = new();
-            AutoCheckSumFrameSegment crc = new(1);
-            command.SetData("20");
-            data.SetData("01 2c");
-            ComplexFrameSegment ncs = new() { length, command, data };
-            ComplexFrameSegment nc = new() { ncs, crc };
-            length.Register(nc);
-            crc.Register(ncs);
-            frame.Add(header);
-            frame.Add(nc);
-            Console.WriteLine(frame);
         });
     }
 }

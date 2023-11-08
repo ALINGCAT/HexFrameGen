@@ -9,9 +9,13 @@ namespace HexFrameGen.BaseFrameSegments
     /// <summary>
     /// 动态帧段 不定长帧段
     /// </summary>
-    public class DynamicFrameSegment : BaseFrameSegment, ISettable
+    public class DynamicFrameSegment : BaseFrameSegment
     {
+        public string Name;
+
         private byte[] _data;
+
+        public DynamicFrameSegment(string name) => Name = name;
 
         public override byte[] Data => _data;
 

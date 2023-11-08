@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HexFrameGen
 {
-    public class BaseFrameSegment : FrameSegment
+    public abstract class BaseFrameSegment : FrameSegment
     {
     }
 }
