@@ -33,6 +33,14 @@ namespace HexFrameGen
 
         public DynamicFrameSegment GetDynamic(string name) => _dynamic[name];
 
+        public void FixDynamic(string name, IEnumerable<byte> data)
+        {
+            var dy = _dynamic[name];
+            _dynamic.Remove(name);
+            var index = _segments.IndexOf(dy);
+            _segments[index] = new StaticFrameSegment(data);
+        }
+
         public HexFrame New() => new(Data);
 
         public override byte[] Data
