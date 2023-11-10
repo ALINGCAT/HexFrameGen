@@ -23,7 +23,7 @@ namespace HexFrameGen.AutoCalculator
             var dir = new DirectoryInfo(path);
             if (!dir.Exists) throw new FileNotFoundException();
             Dictionary<string, IAutoCalculator> calculators = new Dictionary<string, IAutoCalculator>();
-            foreach (var dict in dir.GetFiles("*.dll").Select(f => GetAutoCalculatorByDllFromDirectory(f.FullName)))
+            foreach (var dict in dir.GetFiles("*.dll").Select(f => GetAutoCalculatorByDll(f.FullName)))
                 calculators = calculators.Concat(dict).ToDictionary(kv => kv.Key, kv => kv.Value);
             return calculators;
         }
