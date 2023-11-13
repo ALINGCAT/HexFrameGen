@@ -19,6 +19,17 @@ namespace HexFrameGen.BaseFrameSegments
 
         public override byte[] Data => _data;
 
+        public DynamicFrameSegment Clone()
+        {
+            var segment = new DynamicFrameSegment(Name);
+            if (_data != null)
+            {
+                segment._data = new byte[_data.Length];
+                Array.Copy(_data, segment._data, _data.Length);
+            }
+            return segment;
+        }
+
         public void SetData(IEnumerable<byte> data) => _data = data.ToArray();
 
         public void SetData(string data) => _data = data.Split(' ', '-').Select(s => Convert.ToByte(s, 16)).ToArray();

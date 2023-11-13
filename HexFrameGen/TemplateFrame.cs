@@ -9,45 +9,32 @@ using System.Xml.Linq;
 
 namespace HexFrameGen
 {
-    public class TemplateFrame : FrameSegment, INewable<HexFrame>
+    public class TemplateFrame : FrameSegment
     {
-        private readonly List<BaseFrameSegment> _segments;
-        private readonly Dictionary<string, DynamicFrameSegment> _dynamic = new();
+        private List<BaseFrameSegment> _segments;
+        public Dictionary<string, DynamicFrameSegment> Dynamic =>
+            _segments.Where(s => s is DynamicFrameSegment).Select(s => s as DynamicFrameSegment).Where(s => s.Name != null).ToDictionary(s => s.Name, s => s);
 
-        public TemplateFrame(params BaseFrameSegment[] segments)
+        public TemplateFrame(params BaseFrameSegment[] segments) => _segments = segments.ToList();
+
+        public TemplateFrame(TemplateFrame frame)
         {
-            _segments = segments.ToList();
-            _dynamic = segments.Where(s => s is DynamicFrameSegment).Select(s => s as DynamicFrameSegment).Where(s => s.Name != null).ToDictionary(s => s.Name, s => s);
+            _segments = frame._segments.Select(s => s is DynamicFrameSegment dfs ? dfs.Clone() : s).ToList();
+            foreach (var auto in _segments.OfType<AutoFrameSegment>())
+                foreach (var dy in _segments.OfType<DynamicFrameSegment>())
+                    auto.ExchangeDynamic(dy);
         }
 
-        public void AddSegment(BaseFrameSegment segment)
-        {
-            if (segment is DynamicFrameSegment)
-            {
-                var ds = segment as DynamicFrameSegment;
-                _segments.Add(segment);
-                _dynamic.Add(ds.Name, ds);
-            }
-            else _segments.Add(segment);
-        }
+        public void AddSegment(BaseFrameSegment segment) => _segments.Add(segment);
 
-        public DynamicFrameSegment GetDynamic(string name) => _dynamic[name];
-
-        public void FixDynamic(string name, IEnumerable<byte> data)
-        {
-            var dy = _dynamic[name];
-            _dynamic.Remove(name);
-            var index = _segments.IndexOf(dy);
-            _segments[index] = new StaticFrameSegment(data);
-        }
-
-        public HexFrame New() => new(Data);
+        public HexFrame Gen() => new(Data);
 
         public override byte[] Data
         {
             get
             {
-                if (_dynamic.Count(ds => ds.Value.Data == null) > 0) throw new InvalidOperationException();
+                if (Dynamic.Count(ds => ds.Value.Data == null) > 0)
+                    throw new InvalidOperationException("There are some DynamicFrames without data: " + string.Concat(Dynamic.Where(kv => kv.Value.Data == null).Select(kv => kv.Key)));
                 List<byte> bytes = new();
                 foreach (var data in _segments.Select(s => s.Data))
                     bytes.AddRange(data);

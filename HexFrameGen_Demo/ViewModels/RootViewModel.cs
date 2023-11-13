@@ -5,6 +5,7 @@ using HexFrameGen.AutoCalculator;
 using HexFrameGen.BaseFrameSegments;
 using Stylet;
 using System;
+using System.IO;
 
 namespace HexFrameGen_Demo.ViewModels
 {
@@ -19,18 +20,20 @@ namespace HexFrameGen_Demo.ViewModels
 
         public RootViewModel()
         {
-            var calculators = AutoCalculatorGetter.GetAutoCalculatorByDll("AutoCalculators/DefaultAutoCalculator.dll");
+            Directory.CreateDirectory("AutoCalculators");
+            var calculator = AutoCalculatorGetter.GetAutoCalculatorByDllFromDirectory("AutoCalculators");
             var header = new StaticFrameSegment("AA 55");
-            var length = new AutoFrameSegment(2) { Calculator = calculators["BytesCount2B"] };
+            var len = new AutoFrameSegment(2) { Calculator = calculator["BytesCount2B"] };
             var command = new DynamicFrameSegment("Command");
             var data = new DynamicFrameSegment("Data");
-            var crc = new AutoFrameSegment(1) { Calculator = calculators["CheckSum1B"] };
-            length.Register(length, command, data, crc);
-            crc.Register(length, command, data);
-            command.SetData("16");
-            data.SetData("03 E8");
-            var template = new TemplateFrame(header, length, command, data, crc);
-            Console.WriteLine(template);
+            var crc = new AutoFrameSegment(1) { Calculator = calculator["CheckSum1B"] };
+            len.Register(len, command, data, crc);
+            crc.Register(len, command, data);
+            TemplateFrame template = new(header, len, command, data, crc);
+            var ct = new TemplateFrame(template);
+            ct.Dynamic["Command"].SetData("20");
+            ct.Dynamic["Data"].SetData("03 E8");
+            Console.WriteLine(ct.Gen());
         }
 
         public string ClickBtnText => "Click Me!";

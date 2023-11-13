@@ -49,7 +49,6 @@
     <Compile Include="FrameSegment.cs" />
     <Compile Include="AutoCalculator\IAutoCalculator.cs" />
     <Compile Include="HexFrame.cs" />
-    <Compile Include="INewable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="BaseFrameSegments\StaticFrameSegment.cs" />
     <Compile Include="TemplateFrame.cs" />

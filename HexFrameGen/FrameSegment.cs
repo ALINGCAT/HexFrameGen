@@ -11,7 +11,7 @@ namespace HexFrameGen
     /// </summary>
     public abstract class FrameSegment
     {
-        public virtual byte[] Data { get; }
+        public abstract byte[] Data { get; }
         public override string ToString() => BitConverter.ToString(Data).Replace("-", " ");
     }
 }
