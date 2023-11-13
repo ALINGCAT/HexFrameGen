@@ -25,6 +25,8 @@ namespace HexFrameGen
                     auto.ExchangeDynamic(dy);
         }
 
+        public TemplateFrame Clone() => new(this);
+
         public void AddSegment(BaseFrameSegment segment) => _segments.Add(segment);
 
         public HexFrame Gen() => new(Data);
