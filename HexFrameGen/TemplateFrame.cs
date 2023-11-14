@@ -43,5 +43,8 @@ namespace HexFrameGen
                 return bytes.ToArray();
             }
         }
+
+        public override string ToString() => 
+            string.Join(" ", _segments.Select(s => s is DynamicFrameSegment ? "--" : (s is AutoFrameSegment ? "**" : s.ToString())).ToArray());
     }
 }
