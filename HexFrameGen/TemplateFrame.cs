@@ -45,6 +45,6 @@ namespace HexFrameGen
         }
 
         public override string ToString() => 
-            string.Join(" ", _segments.Select(s => s is DynamicFrameSegment ? "--" : (s is AutoFrameSegment ? "**" : s.ToString())).ToArray());
+            string.Join(" ", _segments.Select(s => s is DynamicFrameSegment dfs ? $"[{dfs.Name}]" : (s is AutoFrameSegment afs ? $"({afs.Calculator.GetType().Name})" : s.ToString())).ToArray());
     }
 }
