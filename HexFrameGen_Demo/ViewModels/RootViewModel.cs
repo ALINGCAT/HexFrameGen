@@ -30,6 +30,7 @@ namespace HexFrameGen_Demo.ViewModels
             len.Register(len, command, data, crc);
             crc.Register(len, command, data);
             TemplateFrame template = new(header, len, command, data, crc);
+            Console.WriteLine(template);
             var ct = new TemplateFrame(template);
             ct.Dynamic["Command"].SetData("20");
             ct.Dynamic["Data"].SetData("03 E8");

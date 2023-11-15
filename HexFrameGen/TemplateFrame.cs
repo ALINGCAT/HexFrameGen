@@ -19,10 +19,15 @@ namespace HexFrameGen
 
         public TemplateFrame(TemplateFrame frame)
         {
-            _segments = frame._segments.Select(s => s is DynamicFrameSegment dfs ? dfs.Clone() : s).ToList();
+            var autodict = frame._segments.OfType<AutoFrameSegment>().ToDictionary(s => s, s => s.Clone());
+            _segments = frame._segments.Select(s => s is DynamicFrameSegment dfs ? dfs.Clone() : (s is AutoFrameSegment afs ? autodict[afs] : s)).ToList();
             foreach (var auto in _segments.OfType<AutoFrameSegment>())
+            {
                 foreach (var dy in _segments.OfType<DynamicFrameSegment>())
                     auto.ExchangeDynamic(dy);
+                foreach (var kv in autodict)
+                    auto.ExchangeAuto(kv.Key, kv.Value);
+            }
         }
 
         public TemplateFrame Clone() => new(this);
@@ -45,6 +50,6 @@ namespace HexFrameGen
         }
 
         public override string ToString() => 
-            string.Join(" ", _segments.Select(s => s is DynamicFrameSegment dfs ? $"[{dfs.Name}]" : (s is AutoFrameSegment afs ? $"({afs.Calculator.GetType().Name})" : s.ToString())).ToArray());
+            string.Join(" ", _segments.Select(s => s is DynamicFrameSegment dfs && s.Data == null ? $"[{dfs.Name}]" : (s is AutoFrameSegment afs && s.Data == null ? $"({afs.Calculator.GetType().Name})" : s.ToString())).ToArray());
     }
 }

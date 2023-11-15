@@ -21,15 +21,30 @@ namespace HexFrameGen.BaseFrameSegments
 
         public AutoFrameSegment(int bytesCount) => BytesCount = bytesCount;
 
+        public AutoFrameSegment(AutoFrameSegment segment)
+        {
+            _segments = new(segment._segments);
+            BytesCount = segment.BytesCount;
+            Calculator = segment.Calculator;
+        }
+
         public void Register(params BaseFrameSegment[] segments) => _segments.AddRange(segments);
 
         public void ExchangeDynamic(DynamicFrameSegment dest)
         {
-            var temp = _segments.Where(s => s is DynamicFrameSegment).Select(s => s as DynamicFrameSegment).Where(s => s.Name.Equals(dest.Name));
+            var temp = _segments.OfType<DynamicFrameSegment>().Where(s => s.Name.Equals(dest.Name));
             if (temp.Count() < 1) return;
             var index = _segments.IndexOf(temp.First());
             _segments[index] = dest;
         }
+
+        public void ExchangeAuto(AutoFrameSegment ori, AutoFrameSegment dest)
+        {
+            if (ori == dest || !_segments.Contains(ori)) return;
+            _segments[_segments.IndexOf(ori)] = dest;
+        }
+
+        public AutoFrameSegment Clone() => new(this);
 
         public override byte[] Data => Calculator?.Calculate(_segments);
     }

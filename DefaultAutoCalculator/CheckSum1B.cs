@@ -10,6 +10,10 @@ namespace DefaultAutoCalculator
 {
     public class CheckSum1B : IAutoCalculator
     {
-        public byte[] Calculate(IEnumerable<BaseFrameSegment> segments) => new byte[1] { (byte)segments.Sum(s => s.Data.Sum(d => d)) };
+        public byte[] Calculate(IEnumerable<BaseFrameSegment> segments)
+        {
+            try { return new byte[1] { (byte)segments.Sum(s => s.Data.Sum(d => d)) }; }
+            catch { return null; }
+        }
     }
 }
