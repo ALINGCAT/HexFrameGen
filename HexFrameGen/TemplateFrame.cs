@@ -36,11 +36,13 @@ namespace HexFrameGen
 
         public HexFrame Gen() => new(Data);
 
+        public bool CanGen() => Dynamic.Count(ds => ds.Value.Data == null) > 0;
+
         public override byte[] Data
         {
             get
             {
-                if (Dynamic.Count(ds => ds.Value.Data == null) > 0)
+                if (!CanGen())
                     throw new InvalidOperationException("There are some DynamicFrames without data: " + string.Concat(Dynamic.Where(kv => kv.Value.Data == null).Select(kv => kv.Key)));
                 List<byte> bytes = new();
                 foreach (var data in _segments.Select(s => s.Data))
