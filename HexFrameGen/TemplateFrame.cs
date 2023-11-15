@@ -36,7 +36,7 @@ namespace HexFrameGen
 
         public HexFrame Gen() => new(Data);
 
-        public bool CanGen() => Dynamic.Count(ds => ds.Value.Data == null) > 0;
+        public bool CanGen() => Dynamic.Count(ds => ds.Value.Data == null) < 1;
 
         public override byte[] Data
         {
