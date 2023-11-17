@@ -18,6 +18,6 @@ namespace HexFrameGen.BaseFrameSegments
 
         public StaticFrameSegment(IEnumerable<byte> data) => _data = data.ToArray();
 
-        public StaticFrameSegment(string data) => _data = data.Split(' ', '-').Select(s => Convert.ToByte(s, 16)).ToArray();
+        public StaticFrameSegment(string data) => _data = data.Split(' ', '-', '_').Select(s => Convert.ToByte(s, 16)).ToArray();
     }
 }
