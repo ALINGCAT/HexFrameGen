@@ -30,6 +30,8 @@ namespace HexFrameGen.BaseFrameSegments
             return segment;
         }
 
+        public void SetData(byte data) => _data = [data];
+
         public void SetData(IEnumerable<byte> data) => _data = data.ToArray();
 
         public void SetData(string data) => _data = data.Split(' ', '-', '_').Select(s => Convert.ToByte(s, 16)).ToArray();
