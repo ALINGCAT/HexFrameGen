@@ -35,6 +35,10 @@ namespace HexFrameGen_Demo.ViewModels
             ct.Dynamic["Command"].SetData("20");
             ct.Dynamic["Data"].SetData("03 E8");
             Console.WriteLine(ct.Gen());
+            var temp = new TemplateFrame("AA 55 (2,BytesCount2B,2-3-4-5) [Command] [Data] (1,CheckSum1B,2-3-4)", calculator);
+            temp.Dynamic["Command"].SetData("20");
+            temp.Dynamic["Data"].SetData("03 E8");
+            Console.WriteLine(temp.Gen());
         }
 
         public string ClickBtnText => "Click Me!";

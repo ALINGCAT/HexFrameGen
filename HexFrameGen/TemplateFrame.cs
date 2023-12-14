@@ -1,4 +1,5 @@
-﻿using HexFrameGen.BaseFrameSegments;
+﻿using HexFrameGen.AutoCalculator;
+using HexFrameGen.BaseFrameSegments;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -17,6 +18,8 @@ namespace HexFrameGen
 
         public TemplateFrame(params BaseFrameSegment[] segments) => _segments = segments.ToList();
 
+        public TemplateFrame(IEnumerable<BaseFrameSegment> segments) => _segments = segments.ToList();
+
         public TemplateFrame(TemplateFrame frame)
         {
             var autodict = frame._segments.OfType<AutoFrameSegment>().ToDictionary(s => s, s => s.Clone());
@@ -27,6 +30,38 @@ namespace HexFrameGen
                     auto.ExchangeDynamic(dy);
                 foreach (var kv in autodict)
                     auto.ExchangeAuto(kv.Key, kv.Value);
+            }
+        }
+
+        public TemplateFrame(string str, Dictionary<string, IAutoCalculator> calculatorDict)
+        {
+            _segments = [];
+            var autos = new Dictionary<AutoFrameSegment, List<int>>();
+            foreach (var s in str.Split(' '))
+            {
+                if (s.First() == '(') // (2, BytesCount2B, 2-3-4-5-6)
+                {
+                    var temp = s.Substring(1, s.Length - 2).Split(',');
+                    var auto = new AutoFrameSegment(int.Parse(temp[0].Trim())) { Calculator = calculatorDict[temp[1].Trim()] };
+                    _segments.Add(auto);
+                    autos.Add(auto, new List<int>(temp[2].Trim().Split('-').Select(int.Parse)));
+                }
+                else if (s.First() == '[')
+                {
+                    _segments.Add(new DynamicFrameSegment(s.Substring(1, s.Length - 2)));
+                }
+                else
+                {
+                    _segments.Add(new StaticFrameSegment(s));
+                }
+            }
+            foreach (var kv in autos)
+            {
+                for (var i = 0; i < _segments.Count; i++)
+                {
+                    if (kv.Value.Contains(i))
+                        kv.Key.Register(_segments[i]);
+                }
             }
         }
 

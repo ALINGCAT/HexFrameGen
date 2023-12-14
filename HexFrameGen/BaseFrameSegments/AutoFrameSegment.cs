@@ -30,6 +30,8 @@ namespace HexFrameGen.BaseFrameSegments
 
         public void Register(params BaseFrameSegment[] segments) => _segments.AddRange(segments);
 
+        public void Register(IEnumerable<BaseFrameSegment> segments) => _segments.AddRange(segments);
+
         public void ExchangeDynamic(DynamicFrameSegment dest)
         {
             var temp = _segments.OfType<DynamicFrameSegment>().Where(s => s.Name.Equals(dest.Name));

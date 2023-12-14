@@ -12,7 +12,7 @@ namespace HexFrameGen.AutoCalculator
     {
         public static Dictionary<string, IAutoCalculator> GetAutoCalculatorByDll(string path)
         {
-            Dictionary<string, IAutoCalculator> calculators = new();
+            Dictionary<string, IAutoCalculator> calculators = [];
             foreach (var type in Assembly.LoadFrom(path).GetTypes().Where(t => t.GetInterfaces().Contains(typeof(IAutoCalculator))))
                 calculators.Add(type.Name, (IAutoCalculator)Activator.CreateInstance(type));
             return calculators;
@@ -22,7 +22,7 @@ namespace HexFrameGen.AutoCalculator
         {
             var dir = new DirectoryInfo(path);
             if (!dir.Exists) throw new FileNotFoundException();
-            Dictionary<string, IAutoCalculator> calculators = new Dictionary<string, IAutoCalculator>();
+            Dictionary<string, IAutoCalculator> calculators = [];
             foreach (var dict in dir.GetFiles("*.dll").Select(f => GetAutoCalculatorByDll(f.FullName)))
                 calculators = calculators.Concat(dict).ToDictionary(kv => kv.Key, kv => kv.Value);
             return calculators;
