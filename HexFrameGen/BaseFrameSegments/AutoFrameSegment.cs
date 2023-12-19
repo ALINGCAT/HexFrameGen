@@ -15,7 +15,7 @@ namespace HexFrameGen.BaseFrameSegments
     /// </summary>
     public class AutoFrameSegment : BaseFrameSegment
     {
-        private List<BaseFrameSegment> _segments = new();
+        public List<BaseFrameSegment> Segments = new();
         public int BytesCount;
         public IAutoCalculator Calculator;
 
@@ -23,31 +23,31 @@ namespace HexFrameGen.BaseFrameSegments
 
         public AutoFrameSegment(AutoFrameSegment segment)
         {
-            _segments = new(segment._segments);
+            Segments = new(segment.Segments);
             BytesCount = segment.BytesCount;
             Calculator = segment.Calculator;
         }
 
-        public void Register(params BaseFrameSegment[] segments) => _segments.AddRange(segments);
+        public void Register(params BaseFrameSegment[] segments) => Segments.AddRange(segments);
 
-        public void Register(IEnumerable<BaseFrameSegment> segments) => _segments.AddRange(segments);
+        public void Register(IEnumerable<BaseFrameSegment> segments) => Segments.AddRange(segments);
 
         public void ExchangeDynamic(DynamicFrameSegment dest)
         {
-            var temp = _segments.OfType<DynamicFrameSegment>().Where(s => s.Name.Equals(dest.Name));
+            var temp = Segments.OfType<DynamicFrameSegment>().Where(s => s.Name.Equals(dest.Name));
             if (temp.Count() < 1) return;
-            var index = _segments.IndexOf(temp.First());
-            _segments[index] = dest;
+            var index = Segments.IndexOf(temp.First());
+            Segments[index] = dest;
         }
 
         public void ExchangeAuto(AutoFrameSegment ori, AutoFrameSegment dest)
         {
-            if (ori == dest || !_segments.Contains(ori)) return;
-            _segments[_segments.IndexOf(ori)] = dest;
+            if (ori == dest || !Segments.Contains(ori)) return;
+            Segments[Segments.IndexOf(ori)] = dest;
         }
 
         public AutoFrameSegment Clone() => new(this);
 
-        public override byte[] Data => Calculator?.Calculate(_segments);
+        public override byte[] Data => Calculator?.Calculate(Segments);
     }
 }
