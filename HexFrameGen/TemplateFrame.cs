@@ -12,21 +12,21 @@ namespace HexFrameGen
 {
     public class TemplateFrame : FrameSegment
     {
-        private List<BaseFrameSegment> _segments;
+        public List<BaseFrameSegment> Segments;
         public Dictionary<string, DynamicFrameSegment> Dynamic =>
-            _segments.Where(s => s is DynamicFrameSegment).Select(s => s as DynamicFrameSegment).Where(s => s.Name != null).ToDictionary(s => s.Name, s => s);
+            Segments.Where(s => s is DynamicFrameSegment).Select(s => s as DynamicFrameSegment).Where(s => s.Name != null).ToDictionary(s => s.Name, s => s);
 
-        public TemplateFrame(params BaseFrameSegment[] segments) => _segments = segments.ToList();
+        public TemplateFrame(params BaseFrameSegment[] segments) => Segments = segments.ToList();
 
-        public TemplateFrame(IEnumerable<BaseFrameSegment> segments) => _segments = segments.ToList();
+        public TemplateFrame(IEnumerable<BaseFrameSegment> segments) => Segments = segments.ToList();
 
         public TemplateFrame(TemplateFrame frame)
         {
-            var autodict = frame._segments.OfType<AutoFrameSegment>().ToDictionary(s => s, s => s.Clone());
-            _segments = frame._segments.Select(s => s is DynamicFrameSegment dfs ? dfs.Clone() : (s is AutoFrameSegment afs ? autodict[afs] : s)).ToList();
-            foreach (var auto in _segments.OfType<AutoFrameSegment>())
+            var autodict = frame.Segments.OfType<AutoFrameSegment>().ToDictionary(s => s, s => s.Clone());
+            Segments = frame.Segments.Select(s => s is DynamicFrameSegment dfs ? dfs.Clone() : (s is AutoFrameSegment afs ? autodict[afs] : s)).ToList();
+            foreach (var auto in Segments.OfType<AutoFrameSegment>())
             {
-                foreach (var dy in _segments.OfType<DynamicFrameSegment>())
+                foreach (var dy in Segments.OfType<DynamicFrameSegment>())
                     auto.ExchangeDynamic(dy);
                 foreach (var kv in autodict)
                     auto.ExchangeAuto(kv.Key, kv.Value);
@@ -35,7 +35,7 @@ namespace HexFrameGen
 
         public TemplateFrame(string str, Dictionary<string, IAutoCalculator> calculatorDict)
         {
-            _segments = [];
+            Segments = [];
             var autos = new Dictionary<AutoFrameSegment, List<int>>();
             foreach (var s in str.Split(' '))
             {
@@ -43,31 +43,31 @@ namespace HexFrameGen
                 {
                     var temp = s.Substring(1, s.Length - 2).Split(',');
                     var auto = new AutoFrameSegment(int.Parse(temp[0].Trim())) { Calculator = calculatorDict[temp[1].Trim()] };
-                    _segments.Add(auto);
+                    Segments.Add(auto);
                     autos.Add(auto, new List<int>(temp[2].Trim().Split('-').Select(int.Parse)));
                 }
                 else if (s.First() == '[')
                 {
-                    _segments.Add(new DynamicFrameSegment(s.Substring(1, s.Length - 2)));
+                    Segments.Add(new DynamicFrameSegment(s.Substring(1, s.Length - 2)));
                 }
                 else
                 {
-                    _segments.Add(new StaticFrameSegment(s));
+                    Segments.Add(new StaticFrameSegment(s));
                 }
             }
             foreach (var kv in autos)
             {
-                for (var i = 0; i < _segments.Count; i++)
+                for (var i = 0; i < Segments.Count; i++)
                 {
                     if (kv.Value.Contains(i))
-                        kv.Key.Register(_segments[i]);
+                        kv.Key.Register(Segments[i]);
                 }
             }
         }
 
         public TemplateFrame Clone() => new(this);
 
-        public void AddSegment(BaseFrameSegment segment) => _segments.Add(segment);
+        public void AddSegment(BaseFrameSegment segment) => Segments.Add(segment);
 
         public HexFrame Gen() => new(Data);
 
@@ -80,13 +80,13 @@ namespace HexFrameGen
                 if (!CanGen())
                     throw new InvalidOperationException("There are some DynamicFrames without data: " + string.Concat(Dynamic.Where(kv => kv.Value.Data == null).Select(kv => kv.Key)));
                 List<byte> bytes = new();
-                foreach (var data in _segments.Select(s => s.Data))
+                foreach (var data in Segments.Select(s => s.Data))
                     bytes.AddRange(data);
                 return bytes.ToArray();
             }
         }
 
         public override string ToString() => 
-            string.Join(" ", _segments.Select(s => s is DynamicFrameSegment dfs && s.Data == null ? $"[{dfs.Name}]" : (s is AutoFrameSegment afs && s.Data == null ? $"({afs.Calculator.GetType().Name})" : s.ToString())).ToArray());
+            string.Join(" ", Segments.Select(s => s is DynamicFrameSegment dfs && s.Data == null ? $"[{dfs.Name}]" : (s is AutoFrameSegment afs && s.Data == null ? $"({afs.Calculator.GetType().Name})" : s.ToString())).ToArray());
     }
 }
