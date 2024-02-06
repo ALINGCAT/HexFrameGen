@@ -39,12 +39,21 @@ namespace HexFrameGen
             var autos = new Dictionary<AutoFrameSegment, List<int>>();
             foreach (var s in str.Split(' '))
             {
-                if (s.First() == '(') // (2, BytesCount2B, 2-3-4-5-6)
+                if (s.First() == '(') // (2, BytesCount2B, 2-3-4-5-6) (2, BytesCount2B, 2>6) (2, BytesCount2B, 2-4>6-8)
                 {
                     var temp = s.Substring(1, s.Length - 2).Split(',');
                     var auto = new AutoFrameSegment(int.Parse(temp[0].Trim())) { Calculator = calculatorDict[temp[1].Trim()] };
                     Segments.Add(auto);
-                    autos.Add(auto, new List<int>(temp[2].Trim().Split('-').Select(int.Parse)));
+                    autos.Add(auto, []);
+                    foreach (var seg in temp[2].Trim().Split('-'))
+                    {
+                        if (seg.Contains(">"))
+                        {
+                            var t = seg.Split('>').Select(int.Parse).ToArray();
+                            autos[auto].AddRange(Enumerable.Range(t[0], t[1] - t[0] + 1));
+                        }
+                        else autos[auto].Add(int.Parse(seg));
+                    }
                 }
                 else if (s.First() == '[')
                 {
