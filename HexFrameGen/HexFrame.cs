@@ -8,7 +8,7 @@ namespace HexFrameGen
 {
     public class HexFrame : FrameSegment
     {
-        public byte[] _data;
+        private byte[] _data;
 
         public HexFrame(byte[] data) => _data = data;
 
